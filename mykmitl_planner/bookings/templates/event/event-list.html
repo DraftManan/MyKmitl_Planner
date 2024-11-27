@@ -1,0 +1,49 @@
+{% extends "event/layoutRe.html" %}
+{% load static %}
+
+{% block title %}Recommend{% endblock %}
+
+{% block content %}
+  <div class="container overflow-y-auto mx-auto p-5">
+    <div class="flex items-center justify-between mb-5">
+
+      <h2 class="text-2xl font-bold">Recommend Places or Activities</h2>
+      <!-- create event -->
+      {% if perms.planner.add_event %}
+      <a href="{% url 'create-event' %}" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Create Activities</a>
+      {% endif %}  
+
+    </div>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      
+      <!-- Card looop -->
+      {% for e in event %}
+      <div class="bg-white rounded-lg overflow-hidden shadow-lg flex flex-col justify-between">
+        {% if e.event_image %}
+          <img src='{{ e.event_image.url }}' alt="{{ event.name }}" class="w-[400px] h-[300px] object-cover">
+        {% else %}
+          <img src="{% static 'images/register.webp' %}" alt="{{ event.name }}"class="w-[400px] h-[300px] object-cover">
+
+        {% endif %}
+        <div class="p-6 flex flex-col flex-grow">
+          <h3 class="text-xl font-semibold">{{ e.name }}</h3>
+
+          <div class="flex flex-col items-start mb-2">
+            <p class="text-xs text-white bg-orange-400 rounded-lg px-2 py-1">
+              {{ e.start_time|date:"d/m/Y" }} - {{ e.end_time|date:"d/m/Y" }}
+            </p>
+          </div>
+
+          <p class="text-gray-700 text-base mb-4 flex-grow">{{ e.description | truncatewords:1 }}</p>
+          <a href="{% url 'event-detail' e.id %}" class="text-orange-500 font-bold hover:underline mt-auto">Learn More →</a>
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
+  {% endblock %}
+
+</body>
+</html>

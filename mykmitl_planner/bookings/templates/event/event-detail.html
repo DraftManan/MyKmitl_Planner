@@ -1,0 +1,110 @@
+{% extends "event/layoutRe.html" %}
+{% load static %}
+
+{% block title %}Event Details{% endblock %}
+
+{% block content %}
+<!-- Container -->
+<div class="max-width-full container overflow-y-auto p-5 relative">
+    <!-- Back Button (X icon) -->
+    <a href="{% url 'event-list' %}" class="absolute top-0 right-5 mt-4 ml-4 text-gray-500 hover:text-gray-700">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+    </a>
+
+    <!-- Event Header -->
+    <h2 class="text-3xl font-bold mb-6 text-center">{{ event.name }}</h2>
+
+    <!-- Event Image -->
+    <div class="mb-6">
+        {% if event.event_image %}
+        <img src="{{ event.event_image.url }}" alt="{{ event.name }}" class="mx-auto w-[600px] h-auto object-cover rounded-lg shadow-lg">
+        {% else %}
+        <img src="{% static 'images/register.webp' %}" alt="{{ event.name }}" class="mx-auto w-[600px] h-auto object-cover rounded-lg shadow-lg">
+        {% endif %}
+    </div>
+
+    <!-- Event Details -->
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+        <!-- Event Name -->
+        <div class="mb-6">
+            <h3 class="text-lg font-semibold">ชื่อกิจกรรม:</h3>
+            <p class="text-gray-700 text-base">{{ event.name }}</p>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-6">
+            <h3 class="text-lg font-semibold">รายละเอียดกิจกรรม:</h3>
+            <p class="text-gray-700 text-base">{{ event.description }}</p>
+        </div>
+
+        <!-- Start and End Date and Time in one row -->
+        <div class="flex space-x-4 mb-6">
+            <!-- Start Time -->
+            <div class="w-1/2">
+                <h3 class="text-lg font-semibold">เริ่มต้น:</h3>
+                <p class="text-gray-700 text-base">{{ event.start_time|date:"d/m/Y H:i" }}</p>
+            </div>
+            <!-- End Time -->
+            <div class="w-1/2">
+                <h3 class="text-lg font-semibold">สิ้นสุด:</h3>
+                <p class="text-gray-700 text-base">{{ event.end_time|date:"d/m/Y H:i" }}</p>
+            </div>
+        </div>
+
+        <!-- Location -->
+        <div class="mb-6">
+            <h3 class="text-lg font-semibold">สถานที่:</h3>
+            <ul class="text-gray-700 text-base">
+                {% if event.facility.exists %}
+                    {% for facility in event.facility.all %}
+                        <li>{{ facility.name }}</li>
+                    {% endfor %}
+                {% else %}
+                    <li>ไม่พบสถานที่จัดกิจกรรม</li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- Status and Participants in one row -->
+        <div class="flex space-x-4 mb-6">
+            <!-- Status -->
+            <div class="w-1/2">
+                <h3 class="text-lg font-semibold">สถานะ:</h3>
+                <p class="text-gray-700 text-base">{{ event.status }}</p>
+            </div>
+            <!-- Participants -->
+            <div class="w-1/2">
+                <h3 class="text-lg font-semibold">จำนวนผู้เข้าร่วม (สูงสุด):</h3>
+                <p class="text-gray-700 text-base">{{ event.participants }} คน</p>
+            </div>
+        </div>
+
+        <!-- Edit Button -->
+        <div class="flex justify-end mt-6 space-x-2">
+            {% if perms.planner.delete_event %}
+            <button onclick="deleteEvent({{ event.id }})" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-200 ease-in-out">
+                Delete
+            </button>
+            {% endif %}
+            {% csrf_token %}
+            {% if perms.planner.change_event %}
+            <a href="{% url 'edit-event' event.id %}" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200 ease-in-out">
+                Edit Activities
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="{% static 'scripts/event.js' %}"></script>
+
+{%endblock%}

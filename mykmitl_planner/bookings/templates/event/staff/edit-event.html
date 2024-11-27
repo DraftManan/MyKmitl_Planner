@@ -1,0 +1,85 @@
+{% extends "event/layoutRe.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Edit Activities{% endblock %}
+
+{% block content %}
+
+<!-- Container -->
+<div class="max-width-full container overflow-y-auto p-5 ">
+    <!-- Form Header -->
+    <h2 class="text-3xl font-bold mb-6">Edit Activities</h2>
+
+    <!-- Form -->
+    <form action="" method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow-lg">
+        {% csrf_token %}
+      
+        <!-- Activity Image -->
+        <div class="mb-4">
+            <label for="image" class="block text-gray-700 font-bold mb-2">ภาพกิจกรรม:</label>
+            {% if event.event_image %}
+            <img src="{{ event.event_image.url }}" alt="{{ event.name }}" class="mb-4 w-[400px] h-auto object-cover rounded-lg shadow-lg">
+            {% endif %}
+            {{ form.event_image|add_class:"w-full p-2 border border-gray-300 rounded-lg" }}
+        </div>
+
+        <!-- Activity Name -->
+        <div class="mb-4">
+            <label for="name" class="block text-gray-700 font-bold mb-2">ชื่อกิจกรรม:</label>
+            {{ form.name|add_class:"w-full p-2 border border-gray-300 rounded-lg" }}
+        </div>
+
+        <!-- Activity Description -->
+        <div class="mb-4">
+            <label for="description" class="block text-gray-700 font-bold mb-2">รายละเอียดกิจกรรม:</label>
+            {{ form.description|add_class:"w-full p-2 border border-gray-300 rounded-lg" }}
+        </div>
+
+        <!-- Start and End Date and Time in one row -->
+        <div class="flex space-x-4 mb-4">
+            <!-- Start Date and Time -->
+            <div class="w-1/2">
+                <label for="start_time" class="block text-gray-700 font-bold mb-2">วันและเวลาเริ่มต้น:</label>
+                {{ form.start_time|add_class:"w-full p-2 border border-gray-300 rounded-lg" }}
+            </div>
+
+            <!-- End Date and Time -->
+            <div class="w-1/2">
+                <label for="end_time" class="block text-gray-700 font-bold mb-2">วันและเวลาปิด:</label>
+                {{ form.end_time|add_class:"w-full p-2 border border-gray-300 rounded-lg" }}
+            </div>
+        </div>
+
+        <!-- Location -->
+        <div class="mb-4">
+            <label for="location" class="block text-gray-700 font-bold mb-2">สถานที่:</label>
+            {{ form.facility|add_class:"w-full p-2 border border-gray-300 rounded-lg" }}
+        </div>
+
+        <!-- Status and Participant Limit in one row -->
+        <div class="flex space-x-4 mb-4">
+            <!-- Status -->
+            <div class="w-1/2">
+                <label for="status" class="block text-gray-700 font-bold mb-2">สถานะ:</label>
+                {{ form.status|add_class:"w-full p-2 border border-gray-300 rounded-lg" }}
+            </div>
+
+            <div class="w-1/2">
+                <label for="participants" class="block text-gray-700 font-bold mb-2">จำนวนผู้เข้าร่วม (สูงสุด):</label>
+                {{ form.participants|add_class:"w-full p-2 border border-gray-300 rounded-lg" }}
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-end space-x-4">
+            <!-- Cancel Button -->
+            <a href="{% url 'event-detail' event.id %}" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Cancel</a>
+            
+            <!-- Submit Button -->
+            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Save Activities</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
